@@ -1,3 +1,5 @@
+# dependencies
+
 library(box)
 library(rlang)
 library(purrr)
@@ -7,4 +9,3 @@ library(magrittr)
 library(stringr)
 library(dplyr)
 library(tibble)
-library(prettyunits)

@@ -11,14 +11,11 @@ box::use(
     tbl = tibble,
     str = stringr,
     rl = rlang,
-    pu = prettyunits,
 )
 
 #' @export
 init_read <- function(root, as_list = TRUE, name = "list_df") {
-    # TODO read files depending on types, where possible, else warn
     start <- Sys.time()
-
     filenames <- list.files(root)
 
     only_csv <- str$str_detect(filenames, ".+\\.csv$")
@@ -26,7 +23,7 @@ init_read <- function(root, as_list = TRUE, name = "list_df") {
     only_rdata <- str$str_detect(filenames, ".+(\\.[(RD)|(rd)]ata)$|(\\.rda)$")
     only_xlsx <- str$str_detect(filenames, ".+\\.xlsx$")
 
-    if (all(isFALSE(only_rdata))) {
+    if (any(only_rdata)) {
         cli$cli_bullets(c(
             "i" = "This function only reads csv, fst and xlsx files.",
             "x" = "RData file{?s} {filenames[only_rdata]} won't be read."
@@ -59,8 +56,17 @@ init_read <- function(root, as_list = TRUE, name = "list_df") {
         list(list_df_csv, list_df_fst, list_df_xlsx) %>%
         pr$list_flatten()
 
+    if (is.null(unlist(list_df))) {
+        return(
+            cli$cli_inform(c(
+                "x" = "No supported file formats found in {.path {root}}.",
+                "i" = "Supported file formats are csv, xlsx, and fst."
+            ))
+        )
+    }
+
     if (as_list) {
-        dur <- pu$pretty_sec(lub$as.duration(Sys.time() - start))
+        dur <- round(lub$as.duration(Sys.time() - start), 2)
         cli$cli_alert_success("Attached {length(list_df)} data sets to {.var {name}} in {dur}.")
         assign(name, list_df, envir = rl$caller_env())
     } else {

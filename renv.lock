@@ -182,13 +182,6 @@
       ],
       "Hash": "01f28d4278f15c76cddbea05899c5d6f"
     },
-    "prettyunits": {
-      "Package": "prettyunits",
-      "Version": "1.1.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "95ef9167b75dde9d2ccc3c7528393e7e"
-    },
     "purrr": {
       "Package": "purrr",
       "Version": "1.0.1",

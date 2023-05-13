@@ -1,6 +1,8 @@
 box::use(
+    cli,
     pr = purrr,
-    str = stringr
+    str = stringr,
+    rl = rlang,
 )
 
 #' @export
@@ -14,8 +16,9 @@ init_copy_file <- function(file, path) {
 #' FIX will fail if lines contain non-lib-calls
 #' NULLify all list entries which do not start with library
 init_install_from_file <- function(file) {
-    list_lines <- readLines(file)
-    r <- "(?<=\\()\\w+(?=\\))"
-    list_names <- pr$map(list_lines, ~ str$str_extract(.x, r))
-    pr$walk(list_names, ~ install.packages(.x))
+    vector_lines <- unlist(readLines(file))
+    r <- "(?<=library\\()\\w+(?=\\))"
+    vector_names <- pr$map_chr(vector_lines, ~ str$str_extract(.x, r))
+    nonmiss <- vector_names[!is.na(vector_names)]
+    pr$walk(nonmiss, ~ install.packages(.x))
 }
