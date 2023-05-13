@@ -9,8 +9,8 @@ box::use(
 #' @export
 #' Turn a quosure into a named vector
 quo2string <- function(x) {
-  name <- rl$as_name(rl$expr(x))
-  setNames(list(rl$as_name(x)), name)
+  name <- deparse(substitute(x))
+  pr$set_names(list(rl$as_name(x)), name)
 }
 
 #' @export
