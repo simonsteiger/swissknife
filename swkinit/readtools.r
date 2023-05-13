@@ -14,9 +14,9 @@ box::use(
 )
 
 #' @export
-init_read <- function(root, as_list = TRUE, name = "list_df") {
+read_dir <- function(dir, as_list = TRUE, name = "list_df") {
     start <- Sys.time()
-    filenames <- list.files(root)
+    filenames <- list.files(dir)
 
     only_csv <- str$str_detect(filenames, ".+\\.csv$")
     only_fst <- str$str_detect(filenames, ".+\\.fst$")
@@ -40,17 +40,17 @@ init_read <- function(root, as_list = TRUE, name = "list_df") {
     list_df_csv <-
         no_suffix_csv %>%
         pr$set_names() %>%
-        pr$map(~ tbl$as_tibble(ut$read.csv(paste0(root, .x, ".csv"))))
+        pr$map(~ tbl$as_tibble(ut$read.csv(paste0(dir, .x, ".csv"))))
 
     list_df_fst <-
         no_suffix_fst %>%
         pr$set_names() %>%
-        pr$map(~ tbl$as_tibble(fst$read_fst(paste0(root, .x, ".fst"))))
+        pr$map(~ tbl$as_tibble(fst$read_fst(paste0(dir, .x, ".fst"))))
 
     list_df_xlsx <-
         no_suffix_xlsx %>%
         pr$set_names() %>%
-        pr$map(~ tbl$as_tibble(xl$read_xlsx(paste0(root, .x, ".xlsx"))))
+        pr$map(~ tbl$as_tibble(xl$read_xlsx(paste0(dir, .x, ".xlsx"))))
 
     list_df <-
         list(list_df_csv, list_df_fst, list_df_xlsx) %>%
@@ -59,7 +59,7 @@ init_read <- function(root, as_list = TRUE, name = "list_df") {
     if (is.null(unlist(list_df))) {
         return(
             cli$cli_inform(c(
-                "x" = "No supported file formats found in {.path {root}}.",
+                "x" = "No supported file formats found in {.path {dir}}.",
                 "i" = "Supported file formats are csv, xlsx, and fst."
             ))
         )
