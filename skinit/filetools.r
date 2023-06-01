@@ -3,6 +3,7 @@ box::use(
     pr = purrr,
     str = stringr,
     rl = rlang,
+    ut = utils,
 )
 
 #' @export
@@ -18,5 +19,5 @@ file_install <- function(file, ...) {
     r <- "(?<=library\\()\\w+(?=\\))"
     vector_names <- pr$map_chr(vector_lines, ~ str$str_extract(.x, r))
     nonmiss <- vector_names[!is.na(vector_names)]
-    pr$walk(nonmiss, ~ install.packages(.x))
+    pr$walk(nonmiss, ~ ut$install.packages(.x))
 }
