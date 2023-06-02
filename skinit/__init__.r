@@ -46,3 +46,12 @@ file_install <- filetools$file_install
 #' }
 #' @export
 read_dir <- readtools$read_dir
+
+#' @export
+read_dir_csv <- readtools$read_dir_csv
+
+#' @export
+read_dir_xlsx <- readtools$read_dir_xlsx
+
+#' @export
+read_dir_fst <- readtools$read_dir_fst
