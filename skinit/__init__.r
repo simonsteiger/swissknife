@@ -1,6 +1,10 @@
 box::use(
-    . / filetools,
-    . / readtools,
+    . / skfile,
+    . / skfile,
+    . / skread,
+    . / skread,
+    . / skread,
+    . / skread,
 )
 
 #' Copy a text file into a path
@@ -15,7 +19,7 @@ box::use(
 #' file_copy("~/.local/R/modules/swissknife/dependencies.r", "dependencies.r")
 #' }
 #' @export
-file_copy <- filetools$file_copy
+file_copy <- skfile$file_copy
 
 #' Install packages from a dependencies file
 #'
@@ -29,7 +33,7 @@ file_copy <- filetools$file_copy
 #' file_install("dependencies.r")
 #' }
 #' @export
-file_install <- filetools$file_install
+file_install <- skfile$file_install
 
 #' Read all tabular data files from a directory
 #'
@@ -45,13 +49,13 @@ file_install <- filetools$file_install
 #' read_dir("data/")
 #' }
 #' @export
-read_dir <- readtools$read_dir
+read_dir <- skread$read_dir
 
 #' @export
-read_dir_csv <- readtools$read_dir_csv
+read_dir_csv <- skread$read_dir_csv
 
 #' @export
-read_dir_xlsx <- readtools$read_dir_xlsx
+read_dir_xlsx <- skread$read_dir_xlsx
 
 #' @export
-read_dir_fst <- readtools$read_dir_fst
+read_dir_fst <- skread$read_dir_fst

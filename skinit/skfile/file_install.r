@@ -7,13 +7,6 @@ box::use(
 )
 
 #' @export
-file_copy <- function(file, path) {
-    list_lines <- readLines(file)
-    vector_lines <- paste0(list_lines, collapse = "\n")
-    writeLines(vector_lines, path)
-}
-
-#' @export
 file_install <- function(file, ...) {
     vector_lines <- unlist(readLines(file))
     r <- "(?<=library\\()\\w+(?=\\))"

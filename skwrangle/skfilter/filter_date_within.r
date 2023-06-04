@@ -32,6 +32,13 @@ filter_date_within <- function(date, interval = NULL, quarter = NULL, year = NUL
                 "x" = "It contains {length(interval)} element(?s): {.var {interval}}."
             ))
         }
+        # Abort if interval duration is negative or zero
+        if (lub$as.duration(lub$interval(interval[1], interval[2])) <= 0) {
+            cli$cli_abort(c(
+                "{.var interval} duration must not be negative or zero.",
+                "x" = "{.var interval} duration is {lub$as.duration(lub$interval(interval[1], interval[2]))}."
+            ))
+        }
 
         return(
             rl$quo(

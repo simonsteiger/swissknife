@@ -1,6 +1,5 @@
 # dependencies
 
-library(box)
 library(rlang)
 library(purrr)
 library(fst)
@@ -14,3 +13,4 @@ library(ggplot2)
 library(scales)
 library(lubridate)
 library(readxl)
+library(testthat)
