@@ -1,8 +1,10 @@
 box::use(
     cli,
-    lub = lubridate[`%within%`],
+    magrittr[`%>%`],
+    lub = lubridate,
     rl = rlang,
     dp = dplyr,
+    pr = purrr,
 )
 
 #' @export
@@ -19,7 +21,7 @@ filter_date_within <- function(date, interval = NULL, quarter = NULL, year = NUL
     if (!is.null(interval) && (!is.null(quarter) || !is.null(year))) {
         cli$cli_abort(c(
             "Cannot filter for {.var interval}, {.var year} and / or {.var quarter} at the same time.",
-            "i" = "Please provide either {.var interval} or {.var quarter} and / or {.var year}."
+            "i" = "Provide either {.var interval} or {.var quarter} and / or {.var year}."
         ))
     }
 
@@ -32,8 +34,22 @@ filter_date_within <- function(date, interval = NULL, quarter = NULL, year = NUL
                 "x" = "It contains {length(interval)} element(?s): {.var {interval}}."
             ))
         }
+        # Abort if interval contains invalid dates
+        invalid_date <- unlist(
+            pr$map(interval, \(i) {
+                lub$ymd(i, quiet = TRUE) %>%
+                    is.na()
+            })
+        )
+
+        if (any(invalid_date)) {
+            cli$cli_abort(c(
+                "{.var interval} contains invalid dates.",
+                "x" = "{interval[invalid_date]} {?is/are} not a valid date{?s}."
+            ))
+        }
         # Abort if interval duration is negative or zero
-        if (lub$as.duration(lub$interval(interval[1], interval[2])) <= 0) {
+        if (lub$ymd(interval[1]) - lub$ymd(interval[2]) <= 0) {
             cli$cli_abort(c(
                 "{.var interval} duration must not be negative or zero.",
                 "x" = "{.var interval} duration is {lub$as.duration(lub$interval(interval[1], interval[2]))}."
@@ -42,7 +58,7 @@ filter_date_within <- function(date, interval = NULL, quarter = NULL, year = NUL
 
         return(
             rl$quo(
-                .data[[date]] %within% lub$interval(interval[1], interval[2])
+                .data[[date]] >= interval[1] & .data[[date]] <= interval[2]
             )
         )
     }

@@ -50,3 +50,8 @@ tt$test_that("filter_date_within() errors if interval duration zero", {
     interval <- c(lub$today(), lub$today())
     tt$expect_error(skf$filter_date_within(df$birthday, interval))
 })
+
+tt$test_that("filter_date_within() errors if interval date(s) invalid", {
+    interval <- c("000", "2000-01-91")
+    tt$expect_error(skf$filter_date_within(df$birthday, interval))
+})
