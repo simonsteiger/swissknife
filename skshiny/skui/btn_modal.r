@@ -4,11 +4,7 @@ box::use(
 )
 
 #' @export
-btn_modal <- function(id,
-                      title = "Modal title",
-                      confirm_btn_name = "Save changes",
-                      close_btn_name = "Close",
-                      ...) {
+btn_modal <- function(id, title = "Title", btn_confirm = "Confirm", btn_close = "Close", ...) {
     dots <- rl$list2(...)
 
     sh$div(
@@ -16,14 +12,14 @@ btn_modal <- function(id,
             class = "btn btn-secondary hover p-2",
             type = "button",
             `data-bs-toggle` = "modal",
-            `data-bs-target` = "#inputModal",
+            `data-bs-target` = paste("#inputModal", id, sep = "-"),
             "Anpassa filtren"
         ),
         sh$div(
             class = "modal fade",
-            id = "inputModal",
+            id = paste("inputModal", id, sep = "-"),
             tabindex = "-1",
-            `aria-labelledby` = "inputModalLabel",
+            `aria-labelledby` = paste("inputModalLabel", id, sep = "-"),
             `aria-hidden` = "true",
             sh$div(
                 class = "modal-dialog",
@@ -33,7 +29,7 @@ btn_modal <- function(id,
                         class = "modal-header",
                         sh$tags$h1(
                             class = "modal-title fs-5",
-                            id = "inputModalLabel",
+                            id = paste("inputModalLabel", id, sep = "-"),
                             title
                         ),
                         sh$tags$button(
@@ -53,14 +49,14 @@ btn_modal <- function(id,
                             type = "button",
                             class = "btn btn-secondary hover p-2",
                             `data-bs-dismiss` = "modal",
-                            close_btn_name
+                            btn_close
                         ),
                         sh$tags$button(
                             id = id,
                             type = "button",
                             class = "btn btn-success action-button hover-success p-2",
                             `data-bs-dismiss` = "modal",
-                            confirm_btn_name
+                            btn_confirm
                         )
                     )
                 )
