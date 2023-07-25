@@ -1,6 +1,6 @@
 box::use(
   . / quotools,
-  . / slashslash,
+  . / infixes,
 )
 
 #' Convert a quosure to a named vector
@@ -63,4 +63,13 @@ quos2string <- quotools$quos2string
 string2quos <- quotools$string2quos
 
 #' @export
-`%//%` <- slashslash$`%//%`
+`%//%` <- infixes$`%00%`
+
+#' @export
+`%00%` <- infixes$`%00%`
+
+#' @export
+`%na?%` <- infixes$`%na?%`
+
+#' @export
+`%nan?%` <- infixes$`%nan?%`
