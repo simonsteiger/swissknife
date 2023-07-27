@@ -1,9 +1,13 @@
 box::use(
-    . / skui,
+    . / btns,
+    . / rows,
 )
 
 #' @export
-btn_modal <- skui$btn_modal
+btn_modal <- btns$btn_modal
 
 #' @export
-btn_dropdown <- skui$btn_dropdown
+btn_dropdown <- btns$btn_dropdown
+
+#' @export
+row2 <- rows$row2
