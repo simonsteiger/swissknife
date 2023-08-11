@@ -4,15 +4,10 @@ box::use(
 )
 
 #' @export
-transcribe <- function(from_path, to_path, from_ext = NULL, to_ext = NULL) {
-    # Check if user passed either both or none of from_ext and to_ext
-    if (sum(is.null(from_ext), is.null(to_ext)) == 1) {
-        stop("Require file paths, or directory paths and `from_ext`, `to_ext`.")
-    }
-
-    # Check if user wants to override a file, if yes, abort
-    if (from_path == to_path && is.null(from_ext) && is.null(to_ext)) {
-        stop("Paths match, won't override files.")
+transcribe <- function(source, target, from = NULL, to = NULL) {
+    # Assert that user passed both or none of `from` and `to`
+    if (sum(is.null(from), is.null(to)) == 1) {
+        stop("Require file paths, or directory paths and `from`, `to`.")
     }
 
     # Name regex for readability
@@ -20,45 +15,52 @@ transcribe <- function(from_path, to_path, from_ext = NULL, to_ext = NULL) {
     regex_extension <- "(?<=[.])[a-zA-Z]+$"
 
     # Get file name
-    file <- str$str_extract(from_path, regex_filename)
+    file <- str$str_extract(source, regex_filename)
 
     # Determine file extension if user passed a full path
-    if (is.null(from_ext) && is.null(to_ext)) {
-        from_ext <- str$str_extract(from_path, regex_extension)
-        to_ext <- str$str_extract(to_path, regex_extension)
-    }
-
-    # Check if user wants to transcribe identical formats, if yes, abort
-    if (from_ext == to_ext) {
-        stop("File extensions match, can't transcribe.")
+    if (is.null(from) && is.null(to)) {
+        from <- str$str_extract(source, regex_extension)
+        to <- str$str_extract(target, regex_extension)
     }
 
     # Assign reading function
-    f_read <- switch(tolower(from_ext),
+    f_read <- switch(tolower(from),
         "rdata" = load,
         "csv" = read.csv,
         "fst" = fst$read_fst,
-        stop(paste0("Can't read from file format ", from_ext))
+        stop(paste0("Can't read from file format ", from))
     )
 
     # Assign writing function
-    f_write <- switch(tolower(to_ext),
+    f_write <- switch(tolower(to),
         "csv" = write.csv,
         "fst" = fst$write_fst,
-        stop(paste0("Can't write to file format ", to_ext))
+        stop(paste0("Can't write to file format ", to))
     )
 
-    # If user passed a directory, transcribe all files with from_ext
+    # If user passed a directory, transcribe all files with from
     if (is.na(file)) {
-        files <- list.files(from_path, pattern = paste0(from_ext, "$"))
-        names <- str$str_remove(files, paste0("\\.", from_ext))
-        for (nms in names) {
-            f_read(paste0(from_path, nms, ".", from_ext))
-            f_write(eval(parse(text = nms)), paste0(to_path, nms, ".", to_ext))
+        # Assert that target is a folder
+        if (!is.na(str$str_extract(target, regex_filename))) {
+            stop("`target` must be a path to a directory, not a file.")
         }
-    # If user passed a full path, transcribe that file to to_path
+        files <- list.files(source, pattern = paste0(from, "$"))
+        names <- str$str_remove(files, paste0("\\.", from))
+        for (nms in names) {
+            f_read(paste0(source, nms, ".", from))
+            f_write(eval(parse(text = nms)), paste0(target, nms, ".", to))
+        }
+        # If user passed a full path, transcribe that file to target
     } else {
-        f_read(from_path)
-        f_write(eval(parse(text = file)), to_path)
+        # Check if user wants to override a file, if yes, abort
+        if (source == target) {
+            stop("Paths match, won't override files.")
+        }
+        # Check if user wants to transcribe identical formats, if yes, abort
+        if (from == to) {
+            stop("File extensions match, can't transcribe.")
+        }
+        f_read(source)
+        f_write(eval(parse(text = file)), target)
     }
 }
