@@ -59,3 +59,6 @@ read_dir_xlsx <- skread$read_dir_xlsx
 
 #' @export
 read_dir_fst <- skread$read_dir_fst
+
+#' @export
+transcribe <- skread$transcribe

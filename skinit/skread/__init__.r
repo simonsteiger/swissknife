@@ -3,6 +3,7 @@ box::use(
     . / read_dir_xlsx,
     . / read_dir_csv,
     . / read_dir_fst,
+    . / transcription,
 )
 
 #' @export
@@ -16,3 +17,6 @@ read_dir_csv <- read_dir_csv$read_dir_csv
 
 #' @export
 read_dir_fst <- read_dir_fst$read_dir_fst
+
+#' @export
+transcribe <- transcription$transcribe
