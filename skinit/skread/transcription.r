@@ -10,8 +10,13 @@ transcribe <- function(source, target, from = NULL, to = NULL) {
         stop("Require file paths, or directory paths and `from`, `to`.")
     }
 
-    # Name regex for readability
-    regex_filename <- "[^\\/]*(?=[.][a-zA-Z]+$)" # get filename w/o extension
+    # Regex to find filename, without extension
+    regex_filename <- switch(Sys.info()[["sysname"]],
+        Windows = "[^\\\\]*(?=[.][a-zA-Z]+$)",
+        Darwin = ,
+        Linux = "[^\\/]*(?=[.][a-zA-Z]+$)"
+    )
+    # Regex to find extension, not rest of path
     regex_extension <- "(?<=[.])[a-zA-Z]+$"
 
     # Get file name
